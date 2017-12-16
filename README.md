@@ -9,11 +9,17 @@ This project will download actual daily demand for each trading interval of the 
 The general intended process is:
 
 Get DATA
-scrape http://nemweb.com.au/Reports/CURRENT/Operational_Demand/ACTUAL_DAILY/ to identify new filenames
+ scrape http://nemweb.com.au/Reports/CURRENT/Operational_Demand/ACTUAL_DAILY/ to identify new filenames
+
 download new files
-unzip files
-read csv data into a database
-delete csv and zip file
+ 
+ unzip files
+ 
+ read csv data into a database
+ 
+ delete csv and zip file
+ 
 
 Present DATA
+
 extract data into python data structure for presentation in a graph
