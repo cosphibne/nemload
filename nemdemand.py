@@ -25,6 +25,7 @@ url = 'http://nemweb.com.au/Reports/CURRENT/Operational_Demand/ACTUAL_DAILY/'
 
 #read the website using urllib.request.urlopen(...).read()
 html = urllib.request.urlopen(url, context = ctx).read()
+
 #BeautifulSoup it
 soup = bs(html,'html.parser')
 
@@ -33,11 +34,30 @@ soup = bs(html,'html.parser')
 
 tags = soup.find_all('a')
 tagslist = list()
-print(type(tags))
-# we now have abs.'ResultSet' of all the tags
+
+# we now have a bs.'ResultSet' of all the tags
+#create a python list of strings
 for tag in tags:
-    #print(tag.get('href', None))
     tagslist.append(tag.get('href', None))
 #now we have a python list of strings
-print(type(tagslist), len(tagslist))
-print(tagslist[0],%n, tagslist[1])
+
+#create a python list of only the filenames
+#for tag in tagslist:
+#    filenamelist.append(re.findall('/([A-Z0-9_]*?.zip)',tag))
+#now we have a python list of the filenames
+
+#time to add some data to a database!!
+
+conn = db.connect('nem_daily_load_files.sqlite')
+cur = conn.cursor()
+
+for tag in tagslist:
+    print(tag)
+    fn = (re.findall('/([A-Z0-9_]*?.zip)',tag))
+    if len(fn) == 0:
+        fn = ("None")
+    print(fn)
+
+    cur.execute(''' INSERT or IGNORE INTO filelist (url, filename)
+        VALUES ( ?, ?)''', (tag, fn[0],))
+conn.commit()
