@@ -41,11 +41,6 @@ for tag in tags:
     tagslist.append(tag.get('href', None))
 #now we have a python list of strings
 
-#create a python list of only the filenames
-#for tag in tagslist:
-#    filenamelist.append(re.findall('/([A-Z0-9_]*?.zip)',tag))
-#now we have a python list of the filenames
-
 #time to add some data to a database!!
 
 conn = db.connect('nem_daily_load_files.sqlite')
@@ -58,6 +53,6 @@ for tag in tagslist:
         fn = ("None")
     print(fn)
 
-    cur.execute(''' INSERT or IGNORE INTO filelist (url, filename)
-        VALUES ( ?, ?)''', (tag, fn[0],))
+    cur.execute(''' INSERT or IGNORE INTO filelist (url, filename, download, unzipped)
+        VALUES ( ?, ?, ?, ?)''', (tag, fn[0],0,0,))
 conn.commit()
