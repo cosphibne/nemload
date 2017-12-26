@@ -43,7 +43,7 @@ for tag in tags:
 
 #time to add some data to a database!!
 
-conn = db.connect('nem_daily_load_files.sqlite')
+conn = db.connect('nem_daily_load_files_test.sqlite')
 cur = conn.cursor()
 
 for tag in tagslist:

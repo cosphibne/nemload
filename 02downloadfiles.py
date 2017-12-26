@@ -16,9 +16,9 @@ ctx.check_hostname = False
 ctx.verify_mode = ssl.CERT_NONE
 
 homepage = 'http://nemweb.com.au'
-dataloc = 'd:\pyth\data\\'
+dataloc = 'd:\pyth\datatest\\'
 
-conn = db.connect('nem_daily_load_files.sqlite')
+conn = db.connect('nem_daily_load_files_test.sqlite')
 cur = conn.cursor()
 
 #check existing files have been logged in database

@@ -5,7 +5,7 @@
 
 import sqlite3
 
-conn = sqlite3.connect('nem_daily_load_files.sqlite')
+conn = sqlite3.connect('nem_daily_load_files_test.sqlite')
 cur = conn.cursor()
 
 #creates the first database
