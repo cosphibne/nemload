@@ -16,9 +16,9 @@ ctx.check_hostname = False
 ctx.verify_mode = ssl.CERT_NONE
 
 homepage = 'http://nemweb.com.au'
-dataloc = 'd:\pyth\datatest\\'
+dataloc = 'd:\pyth\data\\'
 
-conn = db.connect('nem_daily_load_files_test.sqlite')
+conn = db.connect('nem_daily_load_files.sqlite')
 cur = conn.cursor()
 
 #check existing files have been logged in database
@@ -68,8 +68,14 @@ while number_of_files > 0:
     time.sleep(5)
     print('ok, downloading...')
 
-#download the file
-    urllib.request.urlretrieve(fileloc, fullfilename)
+    #download the file
+    try:
+        urllib.request.urlretrieve(fileloc, fullfilename)
+    except:
+        cur.execute(''' UPDATE filelist SET
+                        download = 2 WHERE
+                        filename = ? ''', (filename,))
+        continue
 
     onlyfiles = [f for f in listdir(dataloc) if isfile(join(dataloc,f))]
     for fid in onlyfiles:

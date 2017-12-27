@@ -8,18 +8,19 @@ from os.path import isfile, join
 import re
 
 
-dataloc = 'd:\pyth\datatest\\'
+dataloc = 'd:\pyth\data\\'
 
-conn = db.connect('nem_daily_load_files_test.sqlite')
+conn = db.connect('nem_daily_load_files.sqlite')
 cur = conn.cursor()
 
 #how many files left to unzip?
 cur.execute(''' SELECT COUNT(filename) FROM filelist
-                WHERE unzipped = ? AND
-                filename LIKE '%zip' ''', (0,))
+                WHERE unzipped = ? AND download = ? AND
+                filename LIKE '%zip' ''', (0,1,))
 
 number_of_files = cur.fetchone()[0]
 print(number_of_files)
+input('Press Enter to continue')
 
 cur.execute(''' SELECT filename FROM filelist
                 WHERE unzipped = ? AND
@@ -49,23 +50,29 @@ for f in onlyfiles:
     #print(f)
     csv = (re.findall('([A-Z0-9_]*?.CSV)',f))
     if len(csv) == 0:
-        remove(dataloc+f) #don't do this yet
+        #remove(dataloc+f) #this deletes a file
         csv = ("None, non-CSV file deleted")
 
 
 onlycsvfiles = [csvf for csvf in listdir(dataloc) if isfile(join(dataloc, csvf))]
 
-
 for df in onlycsvfiles:
     fileid = (re.findall('([A-Z0-9_]*?).CSV',df))
+    print('fileid =  ', fileid)
+
     lookupdf = ' '.join(fileid) +'.zip' #creates the zip filename from the csv name
-#looks up the correct record
+    print('Lookup values = ', lookupdf)
+    #looks up the correct record
     cur.execute(''' SELECT id FROM filelist
                     WHERE unzipped = ? AND
                     filename = ? ''', (0, lookupdf))
-    targetfile = cur.fetchone()[0]
+    try:
+        targetfile = cur.fetchone()[0]
+        #updates the record to show the file is unzipped
+        cur.execute('''UPDATE filelist SET unzipped = ?
+                        WHERE id = ?''', (1,targetfile))
+    except:
+        continue
 
-#updates the record to show the file is unzipped
-    cur.execute('''UPDATE filelist SET unzipped = ?
-                   WHERE id = ?''', (1,targetfile))
+
 conn.commit()
