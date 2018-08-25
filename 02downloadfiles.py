@@ -1,7 +1,7 @@
 #this is the program that will download the files from the website
 #once downloaded, it checks if the file on the harddrive has the same name as
 #the file in the html.
-#if so, it updates the database to indicate teh file has been downloaded
+#if so, it updates the database to indicate the file has been downloaded
 
 import urllib.request, urllib.parse, urllib.error
 import sqlite3 as db

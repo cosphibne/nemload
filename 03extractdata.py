@@ -8,6 +8,7 @@ from os.path import isfile, join
 import re
 
 
+
 dataloc = 'd:\pyth\data\\'
 
 conn = db.connect('nem_daily_load_files.sqlite')
@@ -27,17 +28,23 @@ cur.execute(''' SELECT filename FROM filelist
                 filename LIKE '%zip' ''', (0,))
 
 #filelist = cur.fetchall()
+#%%
 # get a filename from the query
 for f in range(number_of_files):
     filename = cur.fetchone()[0]
-    #print(dataloc + filename)
+    print(dataloc + filename)
+
 #unzips the file
     try:
         zip_ref = zipfile.ZipFile(dataloc + filename, 'r')
+        print(filename, ' opened')
         zip_ref.extractall(dataloc)
         zip_ref.close()
+        #remove(dataloc+f) #this deletes a file
+        
     except:
         continue
+#%%
 
 #check that the file has been unzipped
 #read the list of files in the directory
@@ -50,9 +57,9 @@ for f in onlyfiles:
     #print(f)
     csv = (re.findall('([A-Z0-9_]*?.CSV)',f))
     if len(csv) == 0:
-        #remove(dataloc+f) #this deletes a file
-        csv = ("None, non-CSV file deleted")
-
+        remove(dataloc+f) #this deletes a file
+        #csv = ("None, non-CSV file deleted")
+#%%
 
 onlycsvfiles = [csvf for csvf in listdir(dataloc) if isfile(join(dataloc, csvf))]
 
